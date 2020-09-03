@@ -1,0 +1,109 @@
+---
+title: "Homework4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Questão 1 **
+
+```{r q1}
+library(nycflights13)
+library(dplyr)
+
+
+flights<-nycflights13::flights
+
+flights_min = flights
+
+nova <- flights_min$dep_time*0.010
+nova <- as.integer(nova)
+nova <- nova*100
+flights_min$dep_time <- flights_min$dep_time-nova
+nova <- nova*0.6
+flights_min$dep_time <- flights_min$dep_time+nova
+
+nova <- flights_min$arr_time*0.010
+nova <- as.integer(nova)
+nova <- nova*100
+flights_min$arr_time <- flights_min$arr_time-nova
+nova <- nova*0.6
+flights_min$arr_time <- flights_min$arr_time+nova
+
+nova <- flights_min$sched_dep_time*0.010
+nova <- as.integer(nova)
+nova <- nova*100
+flights_min$sched_dep_time <- flights_min$sched_dep_time-nova
+nova <- nova*0.6
+flights_min$sched_dep_time <- flights_min$sched_dep_time+nova
+
+nova <- flights_min$sched_arr_time*0.010
+nova <- as.integer(nova)
+nova <- nova*100
+flights_min$sched_arr_time <- flights_min$sched_arr_time-nova
+nova <- nova*0.6
+flights_min$sched_arr_time <- flights_min$sched_arr_time+nova
+
+
+print("Atraso na chegada de duas horas ou mais")
+filter(flights_min,(arr_delay/60)>=2)
+print("Voaram com destino a Houston")
+filter(flights_min,dest == "IAH"|dest == "HOU")
+print("Foram realizadas pelas companhias aereas United, American ou Delta Airlines")
+filter(flights_min,carrier == "UA"|dest == "DL" | dest =="AA")
+print("Partiram no verão(julho, agosto, setembro)")
+filter(flights_min, month == "7"|month == "8"| month == "9" )
+print("Não partiram atrasados, porem chegaram com mais de duas horas de atraso ao destino")
+filter(flights_min,dep_delay<=0 & (arr_delay/60)>2)
+print("Partiram entre meia noite e seis da manhã")
+filter(flights_min, (dep_time/60)>=0 & (dep_time/60)<=6)
+
+
+```
+
+**Questão 2 **
+
+```{r q2}
+
+voos <- aggregate(flights_min$arr_delay,by=list(voos=flights_min$flight),FUN=sum)
+head(arrange(voos,desc(x)))
+
+```
+
+**Questão 3 **
+
+```{r q3}
+
+
+flight_vel <- aggregate(flights_min$distance/flights_min$air_time*60 ,by=list(flight=flights_min$flight),FUN=mean)
+head(arrange(flight_vel,desc(x)))
+
+```
+
+**Questão 4 **
+
+```{r q4}
+
+print("Quando a variavel é inserida varias vezes no select, ele retorna a variavel apenas uma vez")
+head(select(flights,arr_delay,arr_delay,arr_delay))
+
+
+```
+
+**Questão 5 **
+
+```{r q5}
+
+head(arrange(flights_min,desc(dep_delay)))
+flights_rank <-mutate(flights_min,rank=min_rank(flights_min$dep_delay))
+head(flights_rank)
+```
+
+**Questão 6 **
+
+```{r q6}
+
+head(mutate(flights_min,mean_air = mean(flights_min$air_time, na.rm = TRUE)))
+```

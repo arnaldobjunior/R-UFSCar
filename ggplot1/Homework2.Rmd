@@ -1,0 +1,74 @@
+---
+title: "Homework 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+Questão 1
+```{r histo,message=FALSE}
+library(ggplot2)
+library(cowplot)
+
+data(USArrests)
+data = USArrests
+
+h1 <- ggplot(data = data) + geom_histogram(mapping = aes(x=Murder),fill = "deeppink1",color = "black") + labs(x = 'Homicídios em cada 100 mil habitantes',y = 'Frequencia')
+h2 <- ggplot(data = data) + geom_histogram(mapping = aes(x=Assault),fill = "darkorchid1",color = "black") + labs(x = 'Assaltos em cada 100 mil habitantes',y = 'Frequencia')
+h3 <- ggplot(data = data) + geom_histogram(mapping = aes(x=UrbanPop),fill = "deepskyblue",color = "black") + labs(x = 'População urbana em cada 100 mil habitantes',y = 'Frequencia')
+h4 <- ggplot(data = data) + geom_histogram(mapping = aes(x=Rape),fill = "darkturquoise",color = "black") + labs(x = 'Estupros em cada 100 mil habitantes',y = 'Frequencia')
+
+box1 <- ggplot(data = data) + geom_boxplot(mapping = aes(x = Murder, y = 2),fill = "deeppink1",color = "black")+coord_cartesian(ylim=c(0,4)) + labs(x = 'Homicídios em cada 100 mil habitantes',y = 'Frequencia')
+box2 <- ggplot(data = data) + geom_boxplot(mapping = aes(x = Assault, y = 3),fill = "darkorchid1",color = "black")+coord_cartesian(ylim=c(0,6))+ labs(x = 'Assaltos em cada 100 mil habitantes',y = 'Frequencia')
+box3 <- ggplot(data = data) + geom_boxplot(mapping = aes(x = UrbanPop, y = 2.5),fill = "deepskyblue",color = "black")+coord_cartesian(ylim=c(0,5))+ labs(x = 'População urbana em cada 100 mil habitantes',y = 'Frequencia')
+box4 <- ggplot(data = data) + geom_boxplot(mapping = aes(x = Rape, y = 3.5),fill = "darkturquoise",color = "black")+coord_cartesian(ylim=c(0,7)) + labs(x = 'Estupros em cada 100 mil habitantes',y = 'Frequencia')
+
+
+print('Homicídios em Estados Americanos')
+plot_grid(h1,box1)
+print("Assaltos em Estados Americanos")
+plot_grid(h2,box2)
+print("População urbana em Estados Americanos")
+plot_grid(h3,box3)
+print("Estupros em Estados Americanos")
+plot_grid(h4,box4)
+```
+
+Questão 2
+```{r dispersao,message=FALSE}
+print('Relação entre Assaltos e População Urbana')
+ggplot(data = data, aes(x = UrbanPop,y = Assault)) + geom_point(color='darkorchid1',size=3)+labs(y = "Assaltos",x = "População Urbana")
+
+```
+
+Questão 3
+```{r quest,message=FALSE}
+library(ggplot2)
+library(cowplot)
+
+data(cars)
+car = cars 
+print("É possivel identificar que há uma relação entre os dados, alguns possuem linearidade.")
+hs1 <- ggplot(car,aes(x =speed,y=dist)) + geom_line() + labs(x = 'velocidade',y = 'distancia')
+hs2 <- ggplot(car,aes(x =speed,y=dist)) + geom_point()+geom_smooth() + labs(x = 'velocidade',y = 'distancia')
+hs3 <- ggplot(car,aes(x =speed,y=dist))+geom_step(stat = "ecdf") + labs(x = 'velocidade',y = 'distancia')
+hs4 <- ggplot(car,aes(x =dist)) + geom_density(fill="#69b3a2", color="aquamarine1", alpha=0.8)+ labs(x = 'velocidade',y = 'frequencia')
+plot_grid(hs1,hs2,hs3,hs4)
+
+
+
+```
+
+
+Questão 4
+
+```{r que,message=FALSE}
+data(cars)
+car = cars 
+ggplot(data=car, aes(x = speed,y = dist)) + geom_point(color='firebrick1',size=3)+labs(y = "distancia",x = "velocidade")
+print("É possivel identificar que se a velocidade aumenta a ditância tambem aumenta, ou seja, algumas delas são proporcionais.")
+
+```

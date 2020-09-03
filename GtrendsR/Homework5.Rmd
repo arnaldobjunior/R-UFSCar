@@ -1,0 +1,91 @@
+---
+title: "Homework 5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r disciplinas, echo=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(gtrendsR)
+library(gridExtra)
+
+ml<-gtrends(c("machine learning"),geo=c("BR"),time="all")
+ml = ml$interest_over_time
+ia<-gtrends(c("inteligencia artificial"),geo=c("BR"),time="all")
+ia = ia$interest_over_time
+es<-gtrends(c("estatistica"),geo=c("BR"),time="all")
+es = es$interest_over_time
+p<-gtrends(c("programacao"),geo=c("BR"),time="all")
+p = p$interest_over_time
+mat<-gtrends(c("matematica"),geo=c("BR"),time="all")
+mat = mat$interest_over_time
+
+
+ggplot()+ 
+  
+  geom_smooth(data =mat,aes(x=date, y=hits,color="Matematica"),se = FALSE)+
+  geom_smooth(data =ml,aes(x=date, y=hits,color="ML"),se = FALSE)+
+  theme_classic()+labs(colour="Disciplina",x="Ano",y="Frequencia")+
+  geom_smooth(data =es,aes(x=date, y=hits,color="Estatistica"),se = FALSE)+
+  geom_smooth(data =ia,aes(x=date, y=hits,color="IA"),se = FALSE)+
+  geom_smooth(data =p,aes(x=date, y=hits,color="Programacao"),se = FALSE)+
+  scale_color_manual(values = c("grey", "red", "blue","purple","violet") )+ggtitle("Buscas no Google no Brasil")
+
+
+
+```
+
+
+```{r musicas, echo=FALSE}
+funk<-gtrends(c("funk"),geo=c("BR"),time="all")
+funk=funk$interest_over_time
+funk_eua<-gtrends(c("funk"),geo=c("US"),time="all")
+funk_eua=funk_eua$interest_over_time
+
+rock<-gtrends(c("rock"),geo=c("BR"),time="all")
+rock=rock$interest_over_time
+rock_eua<-gtrends(c("rock"),geo=c("US"),time="all")
+rock_eua=rock_eua$interest_over_time
+
+pop<-gtrends(c("pop"),geo=c("BR"),time="all")
+pop=pop$interest_over_time
+pop_eua<-gtrends(c("pop"),geo=c("US"),time="all")
+pop_eua=pop_eua$interest_over_time
+
+mpb<-gtrends(c("mpb"),geo=c("BR"),time="all")
+mpb=mpb$interest_over_time
+mpb_eua<-gtrends(c("mpb"),geo=c("US"),time="all")
+mpb_eua=mpb_eua$interest_over_time
+
+ggplot()+
+  geom_smooth(data =mpb,aes(x=date, y=hits,color="mpb"),se = FALSE)+
+  geom_smooth(data =rock,aes(x=date, y=hits,color="rock"),se = FALSE)+
+  geom_smooth(data =funk,aes(x=date, y=hits,color="funk"),se = FALSE)+
+  geom_smooth(data =pop,aes(x=date, y=hits,color="pop"),se = FALSE)+
+  scale_color_manual(values = c("red", "brown", "orange","dark grey"))+
+  theme_classic()+labs(colour="Generos musicais",x="Ano",y="Frequencia")+
+  ggtitle("Buscas no Google no Brasil")
+g1<-ggplot()+
+  geom_smooth(data =mpb,aes(x=date, y=hits,color="BR"),se = FALSE,show.legend = FALSE)+
+  geom_smooth(data =mpb_eua,aes(x=date, y=hits,color="EUA"),se = FALSE,show.legend = FALSE)+
+  labs(colour="Paises",x="",y="Frequencia")+theme_classic()+ggtitle("MPB")
+g2<-ggplot()+
+  geom_smooth(data =pop,aes(x=date, y=hits,color="BR"),se = FALSE)+
+  geom_smooth(data =pop_eua,aes(x=date, y=hits,color="EUA"),se = FALSE)+
+  labs(colour="Paises",x="",y="")+theme_classic()+ggtitle("POP")
+g3<-ggplot()+
+  geom_smooth(data =rock,aes(x=date, y=hits,color="BR"),se = FALSE,show.legend = FALSE)+
+  geom_smooth(data =rock_eua,aes(x=date, y=hits,color="EUA"),se = FALSE,show.legend = FALSE)+
+  labs(colour="Paises",x="Ano",y="Frequencia")+theme_classic()+ggtitle(" ROCK")
+g4<-ggplot()+
+  geom_smooth(data =funk,aes(x=date, y=hits,color="BR"),se = FALSE)+
+  geom_smooth(data =funk_eua,aes(x=date, y=hits,color="EUA"),se = FALSE)+
+  labs(colour="Paises",x="Ano",y="")+theme_classic()+ggtitle("FUNK")
+grid.arrange( grobs = list(g1,g2,g3,g4),nrows=2,top="Buscas no Google")
+```
+

@@ -1,0 +1,129 @@
+---
+title: "Homework3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Questão 1**
+
+```{r 1, echo=FALSE}
+print("O argumento 'Data' da função ggplot() é utilizado para receber  o dataframe.")
+```
+
+**Questão 2**
+
+```{r 2, echo=FALSE}
+library(ggplot2)
+data(mpg)
+mpg=mpg
+print("O camando head mostra as 6 primeiras linhas")
+head(mpg)
+print("O comando dim mostra o numero de linhas e colunas")
+dim(mpg)
+print("O comando names apresenta os nomes das colunas")
+names(mpg)
+print("O comando tail mostra as ultimas 6 linhas")
+tail(mpg)
+
+
+```
+
+**Questão 3**
+
+```{r 3, echo=FALSE}
+ggplot(data = mpg,aes(x=hwy,y=cyl))+ geom_point(color="darksalmon",size=3)+labs(title ='Relação entre cilindros e milhas por galão',y='Numero de cilindros',x='Milhas por galão')+theme_minimal()
+print("A relação entre o número de cilindros e milhas por galão não é linear,para concluir algo será necessario avaliar junto com outras variaveis.")
+
+
+```
+
+**Questão 4**
+
+```{r 4, echo=FALSE}
+mpg_fl = mpg
+mpg_fl$fl[mpg_fl$fl == "e"] <- "ethanol"
+mpg_fl$fl[mpg_fl$fl == "d"] <- "diesel"
+mpg_fl$fl[mpg_fl$fl == "r"] <- "regular"
+mpg_fl$fl[mpg_fl$fl == "p"] <- "premium"
+mpg_fl$fl[mpg_fl$fl == "c"] <- "natural gas"
+
+ggplot(data = mpg_fl,aes(x=fl,y=manufacturer))+ geom_point(aes(colour = factor(fl)),size=3)+labs(title ='Relação entre fabricante e combustivel',y='fabricante',x='combustivel')+theme_minimal()
+
+print("A maioria dos fabricantes implementam em seus carros combustivel regular. Audi, Hyundai, Mercury e Toyota trabalham com apenas 1 tipo de combustivel. ")
+```
+
+**Questão 5**
+
+```{r 5, echo=FALSE,message=FALSE}
+library(dplyr)
+library(gridExtra)
+library(tidyr)
+mpg2=mpg
+mpg3=mpg
+mpg4=mpg
+g1<-ggplot(data = mpg2,aes(x=class))+geom_histogram(aes(fill = ..count..), stat = "count") +theme_minimal() + scale_fill_gradient("Count", low = "darkred", high = "darkorange")
+g2<-ggplot(data = mpg2,aes(x=trans))+geom_histogram(aes(fill = ..count..), stat = "count") +theme_minimal() + scale_fill_gradient("Count", low = "tomato4", high = "tomato")
+g3<-ggplot(data = mpg, mapping = aes(y = class, x = hwy)) +
+geom_boxplot() + coord_flip()
+g4<-ggplot(data = mpg, mapping = aes(y = trans, x = hwy)) +
+geom_boxplot() + coord_flip()
+grid.arrange(g1,g2,nrow = 2)
+grid.arrange(g3,g4,nrow = 2)
+
+```
+
+**Questão 6**
+
+```{r 6, echo=FALSE}
+ggplot(data = mpg2,aes(x=displ,y=hwy))+geom_point(aes(color=class)) + facet_wrap(~ class, nrow = 2)
+ggplot(data = mpg,aes(x=cyl,y=drv))+geom_point(aes(color=drv)) + facet_wrap(drv~cyl)
+print("Quando o color é alterado para 'cyl' a cor do grafico muda e a legenda vira um degrade. O face_wrap cria varios graficos comparando as instancias dos atributos inseridos")
+
+```
+
+**Questão 7**
+
+```{r 7, echo=FALSE}
+library(readxl)
+library(ggthemes)
+library(ggrepel)
+homework3= read_excel("C:/Users/bispo/Downloads/homework3.xlsx")
+homework3$HDI = as.numeric(homework3$HDI)
+homework3$CPI = as.numeric(homework3$CPI)
+
+ggplot(data = homework3,aes(x=CPI,y=HDI))+ geom_point(color="red")+labs(title ='Relação entre CPI e HDI',y='HDI',x='CPI')
+
+ggplot(data = homework3,aes(x=CPI,y=HDI))+ geom_point(aes(color=Region))+labs(title ='Relação entre CPI e HDI',y='HDI',x='CPI')+ scale_color_brewer(palette="Spectral")
+
+ggplot(data = homework3,aes(x=CPI,y=HDI))+ geom_point(aes(color=Region),size=3)+labs(title ='Relação entre CPI e HDI',y='HDI',x='CPI')+ scale_color_brewer(palette="Spectral")
+
+ggplot(data = homework3,aes(x=CPI,y=HDI,size=HDI))+geom_point(aes(color=Region))+labs(title ='Relação entre CPI e HDI',y='Indice de desenvolvimento humano',x='Percepção da corrupção')+ scale_color_brewer(palette="Set3")
+
+n <- c("Russia", "Venezuela", "Iraq", "Myanmar", "Sudan","Afghanistan", "Congo", "Greece", "Argentina", "Brazil","India", "Italy", "China", "South Africa", "Spane","Botswana", "Cape Verde", "Bhutan", "Rwanda", "France","United States", "Germany", "Britain", "Barbados", "Norway", "Japan","New Zealand", "Singapore")
+
+homework3$Region[homework3$Region == "EU W. Europe"] <-"OECD"
+homework3$Region[homework3$Region == "Americas"] <-"Americas"
+homework3$Region[homework3$Region == "Asia Pacific"] <-"Asia &\nOceania"
+homework3$Region[homework3$Region == "East EU Cemt Asia"] <-"Central &\nEastern Europe"
+homework3$Region[homework3$Region == "MENA"] <-"Middle East &\nnorth Africa"
+homework3$Region[homework3$Region == "SSA"] <-"Sub-Saharan\nAfrica"
+
+g <- ggplot(data = homework3,aes(x=CPI,y=HDI,label =Country ))
+
+g + geom_smooth( method = "glm", formula = y~log(x), se = FALSE, color = "red")+
+geom_point(aes(color=Region),shape=1,stroke = 2, size=3, fill = "white")+
+labs(title ='Relação entre CPI e HDI',y='Indice de desenvolvimento humano',x='Percepção da corrupção',color="") + 
+scale_color_brewer(palette="Dark2")+
+theme_hc() + 
+guides(colour = guide_legend(nrow = 1))+
+theme(legend.position="top")+
+scale_x_continuous(breaks=seq(0,10, by = 1),limits = c(1, 10))+
+scale_y_continuous(breaks=seq(0, 1.2, by = 0.1),limits = c(0.2,1))+
+geom_text_repel(color = "gray30",data = subset(homework3, Country %in% n),force = 10)
+
+
+```
+
